@@ -1,0 +1,25 @@
+{
+  "name": "organize-node",
+  "version": "0.0.1",
+  "description": "Setting up and organizing your Node.js project so we can all read it and use it.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/rbcasperson/organize-node.git"
+  },
+  "keywords": [
+    "organize",
+    "node",
+    "setup",
+    "refactor"
+  ],
+  "author": "Ryan Casperson <casperson.ryan@gmail.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/rbcasperson/organize-node/issues"
+  },
+  "homepage": "https://github.com/rbcasperson/organize-node#readme"
+}
