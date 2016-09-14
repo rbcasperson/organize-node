@@ -8,24 +8,14 @@ An introductory walkthrough organizing your Node.js project so that users can re
 
 Many of the things presented below are opinion based and can and should be discussed and debated. What you should try to take away from this is that these things are important to think about. You should do everything for a reason, thinking about what it is your project does and how it can be most clearly and efficiently put together.
 
-If you
+If you have some different ideas about these topics, make an issue to open a discussion!
 
 ## Table of Contents
 
-- [Install](#install)
-- [Usage](#usage)
-- [Settings](#settings)
-  - [Required Settings](#required-settings)
-  - [Sprite Sheet](#sprite-sheet)
-  - [Layers](#layers)
-      - [Single Layer](#single-layer)
-      - [Multiple Layers](#multiple-layers)
-- [Additional Settings](#additional-settings)
-    - [Camera](#camera)
-    - [Character](#character)
-        - [Collision Points](#collision-points)
-- [Examples](#settings)
-- [License](#license)
+- [Initial Setup](#initial-setup)
+    - [npm init](#npm-init)
+    - [babel](#babel)
+    - [Browserify](#browserify)
 
 ## Install
 
