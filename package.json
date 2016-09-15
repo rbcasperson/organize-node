@@ -12,9 +12,7 @@
   },
   "keywords": [
     "organize",
-    "node",
-    "setup",
-    "refactor"
+    "node"
   ],
   "author": "Ryan Casperson <casperson.ryan@gmail.com>",
   "license": "MIT",
