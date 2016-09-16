@@ -1,6 +1,6 @@
 import * as _ from 'lodash';
 
-class Deck {
+export class Deck {
     constructor() {
         this.cards = [];
         this.cardsInPlay = [];
@@ -27,7 +27,7 @@ class Deck {
     }
 }
 
-class Player {
+export class Player {
     constructor(name) {
         this.name = name;
         this.hand = [];
@@ -51,7 +51,7 @@ class Player {
     }
 }
 
-class Game {
+export class Game {
     constructor(playerNames) {
         this.players = {};
         _.each(playerNames, name => {
