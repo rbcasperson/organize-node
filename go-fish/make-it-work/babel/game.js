@@ -39,7 +39,7 @@ export class Deck {
     }
     
     shuffle() {
-        _.shuffle(this.cards);
+        this.cards = _.shuffle(this.cards);
     }
 }
 
@@ -86,6 +86,4 @@ export class Game {
             player.hand = this.deck.draw(7);
         })
     }
-    
-    
 }

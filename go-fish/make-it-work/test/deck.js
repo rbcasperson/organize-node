@@ -1,14 +1,14 @@
 import test from 'ava';
+import * as _ from 'lodash';
 
 import { Deck } from '../babel/game';
-import correctCards from './correctCards';
+import { correctCards } from './data/correctCards';
 
 let deck1, deck2, deck3, deck4;
 let oneCard, sevenCards;
 
 test.before(t => {
     deck1 = new Deck();
-    console.log(deck1.cards);
     
     deck2 = new Deck();
     oneCard = deck2.draw();
@@ -25,12 +25,8 @@ test('the deck has 52 cards', t => {
     t.true(deck1.cards.length === 52);
 });
 
-test.skip('the deck has the 4 correct suits', t => {
-    t.pass();
-});
-
-test.skip('each suit in the deck has 13 values', t => {
-    t.pass();
+test('the deck has all the correct cards in it', t => {
+    t.true(_.isEqual(correctCards, deck1.cards));
 });
 
 test('one card is drawn by default', t => {

@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "babel": "babel make-it-work/babel/ -d make-it-work/src",
-    "test": "ava make-it-work/test/* -v"  
+    "test": "ava -v"  
   },
   "babel": {
     "presets": [
@@ -15,7 +15,11 @@
   },
   "ava": {
     "require": "babel-register",
-    "babel": "inherit"
+    "babel": "inherit",
+    "files": [
+        "make-it-work/test/*.js",
+        "!make-it-work/test/data/*.js"
+    ]
   },
   "keywords": [
     "go",

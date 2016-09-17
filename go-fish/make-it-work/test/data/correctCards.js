@@ -1,4 +1,4 @@
-export default var correctCards = [ 
+export var correctCards = [ 
   { name: '2 of hearts', suit: 'hearts', value: 2 },
   { name: '3 of hearts', suit: 'hearts', value: 3 },
   { name: '4 of hearts', suit: 'hearts', value: 4 },
