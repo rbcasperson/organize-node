@@ -1,33 +1,49 @@
 import * as _ from 'lodash';
 
-class Deck {
+export class Deck {
     constructor() {
-        this.cards = [];
+        this.suits = ['hearts', 'diamonds', 'clubs', 'spades'];
+        this.values = _.concat(_.range(2, 11), ['ace', 'king', 'queen', 'jack']);
+        this.generateCards();
         this.cardsInPlay = [];
     }
     
+    generateCards() {
+        this.cards = [];
+        _.each(this.suits, suit => {
+            _.each(this.values, value => {
+                this.cards.push({
+                    name: `${value} of ${suit}`,
+                    suit: suit,
+                    value: value
+                });
+            });
+        });
+    }
+    
     draw(n = 1) {
-        drawnCards = []
+        let drawnCards = []
         _.each(_.range(n), count => {
-            topCard = this.cards.pop;
+            let topCard = this.cards.pop();
             drawnCards.push(topCard);
             this.cardsInPlay.push(topCard);
         })
+        return drawnCards
     }
     
     collect() {
         _.each(this.cardsInPlay, card => {
-            this.cards.append(card);
+            this.cards.push(card);
         })
         this.cardsInPlay = [];
     }
     
     shuffle() {
-        _.shuffle(this.cards);
+        this.cards = _.shuffle(this.cards);
     }
 }
 
-class Player {
+export class Player {
     constructor(name) {
         this.name = name;
         this.hand = [];
@@ -51,7 +67,7 @@ class Player {
     }
 }
 
-class Game {
+export class Game {
     constructor(playerNames) {
         this.players = {};
         _.each(playerNames, name => {
@@ -70,6 +86,4 @@ class Game {
             player.hand = this.deck.draw(7);
         })
     }
-    
-    
 }
