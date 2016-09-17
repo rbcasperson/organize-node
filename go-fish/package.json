@@ -13,6 +13,10 @@
     ],
     "plugins": []
   },
+  "ava": {
+    "require": "babel-register",
+    "babel": "inherit"
+  },
   "keywords": [
     "go",
     "fish",

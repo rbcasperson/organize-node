@@ -2,22 +2,38 @@ import * as _ from 'lodash';
 
 export class Deck {
     constructor() {
-        this.cards = [];
+        this.suits = ['hearts', 'diamonds', 'clubs', 'spades'];
+        this.values = _.concat(_.range(2, 11), ['ace', 'king', 'queen', 'jack']);
+        this.generateCards();
         this.cardsInPlay = [];
     }
     
+    generateCards() {
+        this.cards = [];
+        _.each(this.suits, suit => {
+            _.each(this.values, value => {
+                this.cards.push({
+                    name: `${value} of ${suit}`,
+                    suit: suit,
+                    value: value
+                });
+            });
+        });
+    }
+    
     draw(n = 1) {
-        drawnCards = []
+        let drawnCards = []
         _.each(_.range(n), count => {
-            topCard = this.cards.pop;
+            let topCard = this.cards.pop();
             drawnCards.push(topCard);
             this.cardsInPlay.push(topCard);
         })
+        return drawnCards
     }
     
     collect() {
         _.each(this.cardsInPlay, card => {
-            this.cards.append(card);
+            this.cards.push(card);
         })
         this.cardsInPlay = [];
     }
