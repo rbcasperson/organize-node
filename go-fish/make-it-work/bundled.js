@@ -83,21 +83,77 @@ var Player = exports.Player = function () {
 
         this.name = name;
         this.hand = [];
-        this.matchesPile = [];
+        this.pairs = [];
     }
 
     _createClass(Player, [{
-        key: 'makeMatch',
-        value: function makeMatch(value) {}
-    }, {
-        key: 'makeAllMatches',
-        value: function makeAllMatches(value) {}
-    }, {
-        key: 'addToMatchPile',
-        value: function addToMatchPile(match) {}
+        key: 'hasA',
+        value: function hasA(value) {
+            return _.includes(this.values, value);
+        }
     }, {
         key: 'removeCard',
-        value: function removeCard(value) {}
+        value: function removeCard(value) {
+            var cardToRemove = void 0;
+            _.each(this.hand, function (card) {
+                if (card.value === value) {
+                    cardToRemove = card;
+                };
+            });
+            _.pull(this.hand, cardToRemove);
+            return cardToRemove;
+        }
+    }, {
+        key: 'hasPair',
+        value: function hasPair() {
+            return _.uniq(this.values).length < this.values.length;
+        }
+    }, {
+        key: 'findAPair',
+        value: function findAPair() {
+            var _this4 = this;
+
+            // return a list with one pair of cards in it
+            var pairs = [];
+            _.each(_.range(this.hand.length), function (i) {
+                var currentCard = _this4.hand[i];
+                var restOfCards = _.slice(_this4.hand, i + 1);
+                _.each(restOfCards, function (card) {
+                    if (card.value === currentCard.value) {
+                        pairs.push([currentCard, card]);
+                    };
+                });
+            });
+            return pairs[0];
+        }
+    }, {
+        key: 'makePairs',
+        value: function makePairs() {
+            var _this5 = this;
+
+            console.log("making pairs");
+            console.log(this.hasPair());
+            if (this.hasPair()) {
+                var pair = this.findAPair();
+                console.log(pair);
+                // add pair to pairs
+                this.pairs.push(pair);
+                // remove those cards from the hand
+                _.each(pair, function (card) {
+                    _.pull(_this5.hand, card);
+                });
+                this.makePairs();
+            };
+        }
+    }, {
+        key: 'values',
+        get: function get() {
+            var values = [];
+            _.each(this.hand, function (card) {
+                values.push(card.value);
+            });
+            return values;
+        }
     }]);
 
     return Player;
@@ -105,13 +161,13 @@ var Player = exports.Player = function () {
 
 var Game = exports.Game = function () {
     function Game(playerNames) {
-        var _this4 = this;
+        var _this6 = this;
 
         _classCallCheck(this, Game);
 
         this.players = {};
         _.each(playerNames, function (name) {
-            _this4.players[name] = new Player(name);
+            _this6.players[name] = new Player(name);
         });
         this.deck = new Deck();
         this.deck.shuffle();
@@ -120,10 +176,10 @@ var Game = exports.Game = function () {
     _createClass(Game, [{
         key: 'deal',
         value: function deal() {
-            var _this5 = this;
+            var _this7 = this;
 
             _.each(this.players, function (player) {
-                player.hand = _this5.deck.draw(7);
+                player.hand = _this7.deck.draw(7);
             });
         }
     }]);
@@ -172,7 +228,8 @@ var cardSprites = {
 
 var banner = document.getElementById("banner");
 
-var displayHand = function displayHand(image) {
+var displayHand = function displayHand() {
+    var image = cardImage;
     var handEl = document.getElementById("hand");
     // clear the hand
     while (handEl.firstChild) {
@@ -186,61 +243,81 @@ var displayHand = function displayHand(image) {
         handEl.appendChild(canvas);
         var context = canvas.getContext('2d');
         context.drawImage(image, cardSprites.values[card.value], cardSprites.suits[card.suit], 73, 98, 0, 0, 73, 98);
+        canvas.addEventListener("click", function () {
+            selectCard(card, canvas);
+        });
     });
 };
 
-var selectedCard = void 0;
-
-var selectCard = function selectCard(card) {
-    // remove selected tag from previous selectedCard
-    selectedCard = card;
-    // add tag to selectedCard
-    console.log(selectedCard.name);
+var displayPairCount = function displayPairCount() {
+    document.getElementById("pairCount").innerHTML = user.pairs.length;
+    // TODO add comp too
 };
 
-var compTurn = function compTurn() {
-    var card = comp.randomCard();
-    banner.innerHTML = 'Computer: "Do you have a ' + card.value + '?"';
-    if (_.includes(user.hand.values, card.value)) {
-        // There is a match
-        banner.innerHTML = 'You: "Yes, I have a ' + card.value + '! Here you are!"';
-        comp.hand.cards += user.removeCard(card.value);
-        comp.makeMatch(card.value);
-        displayHand();
-        compTurn();
+var selectedCard = void 0;
+var selectedEl = void 0;
+
+var selectCard = function selectCard(card, el) {
+    if (selectedCard !== card) {
+        if (selectedEl) {
+            selectedEl.style.border = "none";
+        };
+        selectedEl = el;
+        selectedEl.style.border = "2px solid black";
+        selectedCard = card;
     } else {
-        // There is not a match
-        banner.innerHTML = "Go Fish!";
-        comp.hand.cards += deck.draw();
-        displayHand();
-        userTurn();
+        selectedEl.style.border = "none";
+        selectedEl = undefined;
+        selectedCard = undefined;
     }
 };
 
-var userTurn = function userTurn() {
-    banner.innerHTML = "Choose A Card";
-    var card = getSelectedCard();
-    banner.innerHTML = 'You: "Computer, do you have a ' + card.value + '?"';
-    if (_.includes(comp.hand.values, card.value)) {
-        // There is a match
-        banner.innerHTML = 'Computer: "Yes, I have a ' + card.value + '! Here you are!"';
-        user.hand.cards += comp.removeCard(card.value);
-        user.makeMatch(card.value);
-        displayHand();
-        userTurn();
+var displayText = function displayText(text) {
+    banner.innerHTML = text;
+};
+
+//WORKING ON THIS
+// for user only here 
+var makePairs = function makePairs() {
+    user.makePairs();
+    displayHand();
+    displayPairCount();
+};
+document.getElementById("makePairs").onclick = makePairs;
+
+// ------------------------------------- //
+
+//WORKING ON THIS
+var turnButton = document.getElementById('takeTurn');
+turnButton.onclick = function (e) {
+    if (selectedCard) {
+        displayText('You: "Computer, do you have a ' + selectedCard.value + '?"');
+        setTimeout(function () {
+            console.log(comp.values);
+            if (comp.hasA(selectedCard.value)) {
+                displayText('Comp: "Yes I do! Here you are!"');
+                user.hand.push(comp.removeCard(selectedCard.value));
+                displayHand();
+                console.log("user hand");
+                console.log(user.values);
+                console.log("comp hand");
+                console.log(comp.values);
+                //TODO call the user turn again
+            } else {
+                displayText('Comp: "Go fish!"');
+                //TODO draw a card, then call the computer's turn
+            };
+        }, 1000);
     } else {
-        // There is not a match
-        banner.innerHTML = "Go Fish!";
-        user.hand.cards += deck.draw();
-        displayHand();
-        compTurn();
+        displayText('Select a card before you take your turn!');
     }
 };
 
 game.deal();
 var cardImage = new Image();
 cardImage.onload = function () {
-    displayHand(cardImage);
+    displayHand();
+    displayPairCount();
 };
 cardImage.src = '../img/cards.png';
 },{"./game":1,"lodash":3}],3:[function(require,module,exports){

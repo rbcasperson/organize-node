@@ -6,6 +6,7 @@
   "scripts": {
     "babel": "babel make-it-work/babel/ -d make-it-work/src",
     "browserify": "browserify make-it-work/src/index.js > make-it-work/bundled.js",
+    "start": "npm run babel && npm run browserify",
     "test": "ava -v"
   },
   "babel": {

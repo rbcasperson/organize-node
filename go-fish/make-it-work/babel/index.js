@@ -33,7 +33,8 @@ let cardSprites = {
 
 let banner = document.getElementById("banner");
 
-let displayHand = (image) => {
+let displayHand = () => {
+    let image = cardImage;
     let handEl = document.getElementById("hand");
     // clear the hand
     while(handEl.firstChild) {
@@ -47,60 +48,78 @@ let displayHand = (image) => {
         handEl.appendChild(canvas);
         let context = canvas.getContext('2d');
         context.drawImage(image, cardSprites.values[card.value], cardSprites.suits[card.suit], 73, 98, 0, 0, 73, 98);
+        canvas.addEventListener("click", function() { selectCard(card, canvas); });
     })
 }
 
+let displayPairCount = () => {
+    document.getElementById("pairCount").innerHTML = user.pairs.length;
+    // TODO add comp too
+};
+
 let selectedCard;
+let selectedEl;
 
-let selectCard = card => {
-    // remove selected tag from previous selectedCard
-    selectedCard = card;
-    // add tag to selectedCard
-    console.log(selectedCard.name);
-}
-
-let compTurn = () => {
-    let card = comp.randomCard();
-    banner.innerHTML = `Computer: "Do you have a ${card.value}?"`;
-    if (_.includes(user.hand.values, card.value)) {
-        // There is a match
-        banner.innerHTML = `You: "Yes, I have a ${card.value}! Here you are!"`
-        comp.hand.cards += user.removeCard(card.value)
-        comp.makeMatch(card.value);
-        displayHand();
-        compTurn();
+let selectCard = (card, el) => {
+    if (selectedCard !== card) {
+        if (selectedEl) { selectedEl.style.border = "none"; };
+        selectedEl = el;
+        selectedEl.style.border = "2px solid black";
+        selectedCard = card;
     } else {
-        // There is not a match
-        banner.innerHTML = "Go Fish!";
-        comp.hand.cards += deck.draw();
-        displayHand();
-        userTurn();
+        selectedEl.style.border = "none";
+        selectedEl = undefined;
+        selectedCard = undefined;
     }
 }
 
-let userTurn = () => {
-    banner.innerHTML = "Choose A Card";
-    let card = getSelectedCard();
-    banner.innerHTML = `You: "Computer, do you have a ${card.value}?"`;
-    if (_.includes(comp.hand.values, card.value)) {
-        // There is a match
-        banner.innerHTML = `Computer: "Yes, I have a ${card.value}! Here you are!"`
-        user.hand.cards += comp.removeCard(card.value)
-        user.makeMatch(card.value);
-        displayHand();
-        userTurn();
+let displayText = text => {
+    banner.innerHTML = text;
+}
+
+//WORKING ON THIS
+// for user only here 
+let makePairs = () => {
+    user.makePairs();
+    displayHand();
+    displayPairCount();
+}
+document.getElementById("makePairs").onclick = makePairs;
+
+
+// ------------------------------------- //
+
+//WORKING ON THIS
+let turnButton = document.getElementById('takeTurn');
+turnButton.onclick = e => {
+    if (selectedCard) {
+        displayText(`You: "Computer, do you have a ${selectedCard.value}?"`);
+        setTimeout(function() {
+            console.log(comp.values);
+            if (comp.hasA(selectedCard.value)) {
+                displayText(`Comp: "Yes I do! Here you are!"`);
+                user.hand.push(comp.removeCard(selectedCard.value));
+                displayHand();
+                console.log("user hand");
+                console.log(user.values);
+                console.log("comp hand");
+                console.log(comp.values);
+                //TODO call the user turn again
+            } else {
+                displayText(`Comp: "Go fish!"`);
+                //TODO draw a card, then call the computer's turn
+            };
+        }, 1000);
     } else {
-        // There is not a match
-        banner.innerHTML = "Go Fish!";
-        user.hand.cards += deck.draw();
-        displayHand();
-        compTurn();
+        displayText(`Select a card before you take your turn!`);
     }
+    
 }
 
 game.deal();
 let cardImage = new Image();
 cardImage.onload = () => {
-    displayHand(cardImage);
+    displayHand();
+    displayPairCount();
 }
 cardImage.src = '../img/cards.png';
