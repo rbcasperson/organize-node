@@ -71,14 +71,10 @@ export class Game {
     constructor(playerNames) {
         this.players = {};
         _.each(playerNames, name => {
-            this.addPlayer(name);
+            this.players[name] = new Player(name);
         })
         this.deck = new Deck();
-        deck.shuffle();
-    }
-    
-    addPlayer(name) {
-        this.players[name] = new Player(name);
+        this.deck.shuffle();
     }
     
     deal() {

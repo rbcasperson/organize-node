@@ -5,7 +5,8 @@
   "main": "index.js",
   "scripts": {
     "babel": "babel make-it-work/babel/ -d make-it-work/src",
-    "test": "ava -v"  
+    "browserify": "browserify make-it-work/src/index.js > make-it-work/bundled.js",
+    "test": "ava -v"
   },
   "babel": {
     "presets": [
@@ -17,8 +18,8 @@
     "require": "babel-register",
     "babel": "inherit",
     "files": [
-        "make-it-work/test/*.js",
-        "!make-it-work/test/data/*.js"
+      "make-it-work/test/*.js",
+      "!make-it-work/test/data/*.js"
     ]
   },
   "keywords": [
@@ -32,7 +33,8 @@
   "devDependencies": {
     "ava": "^0.16.0",
     "babel-cli": "^6.14.0",
-    "babel-preset-es2015": "^6.14.0"
+    "babel-preset-es2015": "^6.14.0",
+    "browserify": "^13.1.0"
   },
   "dependencies": {
     "lodash": "^4.15.0"

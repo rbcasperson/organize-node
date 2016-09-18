@@ -1,25 +1,57 @@
 import * as _ from 'lodash';
-import GoFish from './game';
+import { Game } from './game';
 
-let game = new GoFish(["user", "comp"]);
+let game = new Game(["user", "comp"]);
 let user = game.players["user"];
 let comp = game.players["comp"];
 let deck = game.deck;
 
+
+let cardSprites = {
+    values: {
+        "ace": 0,
+        "2": 73,
+        "3": 73 * 2,
+        "4": 73 * 3,
+        "5": 73 * 4,
+        "6": 73 * 5,
+        "7": 73 * 6,
+        "8": 73 * 7,
+        "9": 73 * 8,
+        "10": 73 * 9,
+        "jack": 73 * 10,
+        "queen": 73 * 11,
+        "king": 73 * 12
+    },
+    suits: {
+        "clubs": 0,
+        "spades": 98,
+        "hearts": 98 * 2,
+        "diamonds": 98 * 3
+    }
+}
+
 let banner = document.getElementById("banner");
 
-let displayHand = () => {
+let displayHand = (image, src) => {
     let handEl = document.getElementById("hand");
     // clear the hand
     while(handEl.firstChild) {
         handEl.removeChild(handEl.firstChild);
     }
-    // display the hand
+    
     _.each(user.hand, card => {
-        let cardEl = new Image(100, 200);
-        cardEl.src = cardImageSources[card.name];
-        handEl.appendChild(cardEl);
+        let canvas = document.createElement('canvas');
+        canvas.height = 98;
+        canvas.width = 73;
+        handEl.appendChild(canvas);
+        let context = canvas.getContext('2d');
+        image.onload = () => {
+            context.drawImage(cardImage, cardSprites.values[card.value], cardSprites.suits[card.suit], 73, 98, 0, 0, 73, 98);
+        };
+        image.src = src;
     })
+    
 }
 
 let compTurn = () => {
@@ -60,3 +92,7 @@ let userTurn = () => {
         compTurn();
     }
 }
+
+game.deal();
+let cardImage = new Image();
+displayHand(cardImage, '../img/cards.png');
