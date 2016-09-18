@@ -172,7 +172,7 @@ var cardSprites = {
 
 var banner = document.getElementById("banner");
 
-var displayHand = function displayHand(image, src) {
+var displayHand = function displayHand(image) {
     var handEl = document.getElementById("hand");
     // clear the hand
     while (handEl.firstChild) {
@@ -185,11 +185,17 @@ var displayHand = function displayHand(image, src) {
         canvas.width = 73;
         handEl.appendChild(canvas);
         var context = canvas.getContext('2d');
-        image.onload = function () {
-            context.drawImage(cardImage, cardSprites.values[card.value], cardSprites.suits[card.suit], 73, 98, 0, 0, 73, 98);
-        };
-        image.src = src;
+        context.drawImage(image, cardSprites.values[card.value], cardSprites.suits[card.suit], 73, 98, 0, 0, 73, 98);
     });
+};
+
+var selectedCard = void 0;
+
+var selectCard = function selectCard(card) {
+    // remove selected tag from previous selectedCard
+    selectedCard = card;
+    // add tag to selectedCard
+    console.log(selectedCard.name);
 };
 
 var compTurn = function compTurn() {
@@ -233,7 +239,10 @@ var userTurn = function userTurn() {
 
 game.deal();
 var cardImage = new Image();
-displayHand(cardImage, '../img/cards.png');
+cardImage.onload = function () {
+    displayHand(cardImage);
+};
+cardImage.src = '../img/cards.png';
 },{"./game":1,"lodash":3}],3:[function(require,module,exports){
 (function (global){
 /**

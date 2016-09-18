@@ -33,7 +33,7 @@ let cardSprites = {
 
 let banner = document.getElementById("banner");
 
-let displayHand = (image, src) => {
+let displayHand = (image) => {
     let handEl = document.getElementById("hand");
     // clear the hand
     while(handEl.firstChild) {
@@ -46,12 +46,17 @@ let displayHand = (image, src) => {
         canvas.width = 73;
         handEl.appendChild(canvas);
         let context = canvas.getContext('2d');
-        image.onload = () => {
-            context.drawImage(cardImage, cardSprites.values[card.value], cardSprites.suits[card.suit], 73, 98, 0, 0, 73, 98);
-        };
-        image.src = src;
+        context.drawImage(image, cardSprites.values[card.value], cardSprites.suits[card.suit], 73, 98, 0, 0, 73, 98);
     })
-    
+}
+
+let selectedCard;
+
+let selectCard = card => {
+    // remove selected tag from previous selectedCard
+    selectedCard = card;
+    // add tag to selectedCard
+    console.log(selectedCard.name);
 }
 
 let compTurn = () => {
@@ -95,4 +100,7 @@ let userTurn = () => {
 
 game.deal();
 let cardImage = new Image();
-displayHand(cardImage, '../img/cards.png');
+cardImage.onload = () => {
+    displayHand(cardImage);
+}
+cardImage.src = '../img/cards.png';
