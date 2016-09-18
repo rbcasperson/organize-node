@@ -47,38 +47,77 @@ export class Player {
     constructor(name) {
         this.name = name;
         this.hand = [];
-        this.matchesPile = [];
+        this.pairs = [];
     }
-    
-    makeMatch(value) {
-        
+
+    get values() {
+        let values = [];
+        _.each(this.hand, card => {
+            values.push(card.value);
+        });
+        return values
     }
-    
-    makeAllMatches(value) {
-        
+
+    hasA(value) {
+        return _.includes(this.values, value);
     }
-    
-    addToMatchPile(match) {
-        
-    }
-    
+
     removeCard(value) {
-        
+        let cardToRemove;
+        _.each(this.hand, card => {
+            if (card.value === value) {
+                cardToRemove = card;
+            };
+        });
+        _.pull(this.hand, cardToRemove)
+        return cardToRemove;
     }
+
+    hasPair() {
+        return _.uniq(this.values).length < this.values.length
+    }
+
+    findAPair() {
+        // return a list with one pair of cards in it
+        let pairs = [];
+        _.each(_.range(this.hand.length), i => {
+            let currentCard = this.hand[i];
+            let restOfCards = _.slice(this.hand, i + 1);
+            _.each(restOfCards, card => {
+                if (card.value === currentCard.value) {
+                    pairs.push([currentCard, card]);
+                };
+            });
+        });
+        return pairs[0];
+    }
+    
+    makePairs() {
+        console.log("making pairs");
+        console.log(this.hasPair());
+        if (this.hasPair()) {
+            let pair = this.findAPair();
+            console.log(pair);
+            // add pair to pairs
+            this.pairs.push(pair);
+            // remove those cards from the hand
+            _.each(pair, card => {
+                _.pull(this.hand, card);
+            });
+            this.makePairs();
+        };
+    }
+    
 }
 
 export class Game {
     constructor(playerNames) {
         this.players = {};
         _.each(playerNames, name => {
-            this.addPlayer(name);
+            this.players[name] = new Player(name);
         })
         this.deck = new Deck();
-        deck.shuffle();
-    }
-    
-    addPlayer(name) {
-        this.players[name] = new Player(name);
+        this.deck.shuffle();
     }
     
     deal() {
