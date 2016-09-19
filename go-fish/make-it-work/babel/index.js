@@ -54,7 +54,7 @@ let displayHand = () => {
 
 let displayPairCount = () => {
     document.getElementById("pairCount").innerHTML = user.pairs.length;
-    // TODO add comp too
+    document.getElementById("compPairCount").innerHTML = comp.pairs.length;
 };
 
 let selectedCard;
@@ -77,8 +77,27 @@ let displayText = text => {
     banner.innerHTML = text;
 }
 
-//WORKING ON THIS
-// for user only here 
+let userDraw = () => {
+    if (deck.cards.length > 0) {
+        user.hand.push(deck.draw()[0]);
+        displayHand();
+    } else {
+        displayText("There are no more cards in the deck!");
+    }
+}
+document.getElementById("draw").onclick = userDraw;
+
+let compDraw = () => {
+    if (deck.cards.length > 0) {
+        comp.hand.push(deck.draw()[0]);
+        compMakePairs();
+        displayPairCount();
+        // display computer hand
+        console.log(comp.values);
+    }
+}
+
+// for user only 
 let makePairs = () => {
     user.makePairs();
     displayHand();
@@ -86,24 +105,14 @@ let makePairs = () => {
 }
 document.getElementById("makePairs").onclick = makePairs;
 
-
-// ------------------------------------- //
-
-//WORKING ON THIS
-let turnButton = document.getElementById('takeTurn');
-turnButton.onclick = e => {
+let userTurn = () => {
     if (selectedCard) {
         displayText(`You: "Computer, do you have a ${selectedCard.value}?"`);
         setTimeout(function() {
-            console.log(comp.values);
             if (comp.hasA(selectedCard.value)) {
                 displayText(`Comp: "Yes I do! Here you are!"`);
                 user.hand.push(comp.removeCard(selectedCard.value));
                 displayHand();
-                console.log("user hand");
-                console.log(user.values);
-                console.log("comp hand");
-                console.log(comp.values);
                 //TODO call the user turn again
             } else {
                 displayText(`Comp: "Go fish!"`);
@@ -113,12 +122,49 @@ turnButton.onclick = e => {
     } else {
         displayText(`Select a card before you take your turn!`);
     }
-    
 }
+let turnButton = document.getElementById('takeTurn');
+turnButton.onclick = userTurn;
+
+let compMakePairs = () => {
+    comp.makePairs();
+    // display computer hand (from behind);
+    console.log(comp.values);
+    displayPairCount();
+}
+
+let globCompChoice
+let compTurn = () => {
+    let compChoice = _.sample(comp.hand);
+    globCompChoice = compChoice;
+    displayText(`Comp: "User, do you have a ${compChoice.value}?"`);
+}
+document.getElementById("compTurn").onclick = compTurn;
+
+let sayNo = () => {
+    displayText(`User: "Go fish!"`);
+    compDraw();
+}
+document.getElementById("no").onclick = sayNo;
+
+let giveCard = () => {
+    if (selectedCard.value === globCompChoice.value) {
+        displayText(`User: "Yes I do! Here you are!`);
+        comp.hand.push(user.removeCard(globCompChoice.value));
+        displayHand();
+        compMakePairs();
+        // display computer hand
+        console.log(comp.values);
+        globCompChoice = undefined;
+    }
+}
+document.getElementById("give").onclick = giveCard;
+// ------------------------------------- //
 
 game.deal();
 let cardImage = new Image();
 cardImage.onload = () => {
+    compMakePairs();
     displayHand();
     displayPairCount();
 }

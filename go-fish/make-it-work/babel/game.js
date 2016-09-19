@@ -93,11 +93,8 @@ export class Player {
     }
     
     makePairs() {
-        console.log("making pairs");
-        console.log(this.hasPair());
         if (this.hasPair()) {
             let pair = this.findAPair();
-            console.log(pair);
             // add pair to pairs
             this.pairs.push(pair);
             // remove those cards from the hand
