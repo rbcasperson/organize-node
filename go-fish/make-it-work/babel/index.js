@@ -33,6 +33,19 @@ let cardSprites = {
 
 let banner = document.getElementById("banner");
 
+let displayButtons = buttonIDs => {
+    let buttons = document.getElementById("buttons");
+    let hidden = document.getElementById("hidden");
+    // clear the buttons
+    _.each(document.getElementById("buttons").children, child => {
+        hidden.appendChild(child);
+    })
+    // display the appropriate
+    _.each(buttonIDs, id => {    
+        buttons.appendChild(document.getElementById(id));
+    })
+}
+
 let displayHand = () => {
     let image = cardImage;
     let handEl = document.getElementById("hand");

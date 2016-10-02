@@ -2,19 +2,26 @@
 <html>
     <head>
         <title>Go Fish!</title>
+        <link rel="stylesheet" type="text/css" href="stylesheet.css">
     </head>
     <body>
         <h1>Go Fish!</h1>
         <h2 id="banner"></h2>
         <h3>Your Hand:</h3>
         <div id="hand"></div>
-        <button id="makePairs">Make Pairs</button>
-        <button id="takeTurn">Take Your Turn</button>
-        <button id="draw">Draw A Card</button>
-        <button id="sort">Sort Your Hand</button>
-        <button id="compTurn">Computer's Turn</button>
-        <button id="give">Give Card To Computer</button>
-        <button id="no">Say "Go Fish!" To Computer</button>
+        <div id="hidden">
+            <h5>Hidden</h5>
+            <button id="makePairs">Make Pairs</button>
+            <button id="takeTurn">Take Your Turn</button>
+            <button id="draw">Draw A Card</button>
+            <button id="sort">Sort Your Hand</button>
+            <button id="compTurn">Computer's Turn</button>
+            <button id="give">Give Card To Computer</button>
+            <button id="no">Say "Go Fish!" To Computer</button>
+        </div>
+        <div id="buttons">
+            <h5>Shown</h5>
+        </div>
         <h3>Pair Count:</h3>
         <div id="pairCount"></div>
         <h3>Computer Pair Count:</h3>

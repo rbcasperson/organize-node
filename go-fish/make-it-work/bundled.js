@@ -225,6 +225,19 @@ var cardSprites = {
 
 var banner = document.getElementById("banner");
 
+var displayButtons = function displayButtons(buttonIDs) {
+    var buttons = document.getElementById("buttons");
+    var hidden = document.getElementById("hidden");
+    // clear the buttons
+    _.each(document.getElementById("buttons").children, function (child) {
+        hidden.appendChild(child);
+    });
+    // display the appropriate
+    _.each(buttonIDs, function (id) {
+        buttons.appendChild(document.getElementById(id));
+    });
+};
+
 var displayHand = function displayHand() {
     var image = cardImage;
     var handEl = document.getElementById("hand");
